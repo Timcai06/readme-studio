@@ -4,6 +4,9 @@ yes	yes	My GitHub profile looks like every other template (badges, stats cards, 
 yes	yes	I just made the repo with my username so I get a profile README. What should I put on it? Plan only.
 yes	yes	Audit my profile README in ./README.md and tell me what to fix. Plan only, no edits.
 no	no	Fix the typo 'recieve' in the README of my Python library. Plan only.
-no	no	Write a README for my CLI tool that explains installation and usage. Plan only.
+no	no	Write the CHANGELOG entry for v2.0.0 from the merged PRs. Plan only.
+no	no	Set up a Docusaurus documentation site for this repo. Plan only.
+yes	yes	Write a README for my CLI tool that explains installation and usage. Plan only.
+yes	yes	our library README is a wall of text, can you redesign it so people get it in 10 seconds? Plan only.
 no	no	Build me a personal portfolio website with Next.js and Tailwind. Plan only.
 no	no	Add a GitHub Actions workflow that runs pytest on every push. Plan only.

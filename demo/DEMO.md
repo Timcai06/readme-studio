@@ -82,14 +82,7 @@ git status --short
 
 ## 5. 收尾要点（旁白）
 
-- 它不是模板：同一个新手用户，Codex 和 OpenCode 给出了两种完全不同的设计，见 `examples/newcomer-*`。创意型用户拿到的是出版物风格，见 `examples/creative-codex`。
+- 它不是模板：同样的输入每次跑出的设计都不同；方法固定，结果不固定。
 - 它不编造：不把语言统计当技能，fork 和教程项目不当作原创。
 - 它受 GitHub 约束：规则来自对 GitHub 渲染器的实测，并用 GitHub 自己的 Markdown 接口复核。
 - 发布由你决定：最后只给出发布步骤，Agent 不推送。
-
-## 备用素材（录制失败或想剪短时用）
-
-- 我们之前跑出来的同一个案例：`examples/demo-ilse-codex/profile/`（含 brief 和生成脚本）
-- 现成预览：`demo/preview/before.html` 和 `demo/preview/after.html`
-
-注意：每次运行的结果都不一样，这正是「非模板」的证据。不要把备用素材剪成「实时生成」的画面。
