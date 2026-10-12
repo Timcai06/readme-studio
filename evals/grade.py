@@ -4,8 +4,8 @@
     python3 evals/grade.py <case> <workspace> [--readme path/inside/workspace]
 
 Finds the produced README (README.md at the workspace root, else profile/README.md,
-else the newest README.md outside .agents/.claude/existing/.profile-studio), runs
-check_profile.py on it and evaluates every "auto" assertion. Manual assertions are
+else the newest README.md outside .agents/.claude/existing/.readme-studio), runs
+check_readme.py on it and evaluates every "auto" assertion. Manual assertions are
 listed for a human reviewer. Prints a table and writes <workspace>/.eval/grade.json.
 """
 from __future__ import annotations
@@ -19,14 +19,14 @@ from contextlib import redirect_stdout
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "skills" / "github-profile-studio" / "scripts"))
-import check_profile  # noqa: E402
+sys.path.insert(0, str(ROOT / "skills" / "readme-studio" / "scripts"))
+import check_readme  # noqa: E402
 
 TEMPLATE_DEFAULTS = ["github-readme-stats", "streak-stats", "github-profile-trophy", "komarev", "snk",
                      "contribution-grid-snake", "readme-typing-svg", "profile-summary-cards", "activity-graph"]
 ORIGIN_MARKERS = ["about.ts", "workspace.svg", "EXPLORER", "pixel-lab", "Ln 13, Col", "⎇ main", "TIMCAI06",
                   "Thanks for stopping by"]
-SKIP = (".agents", ".claude", "existing", ".profile-studio", ".eval", ".git", "node_modules")
+SKIP = (".agents", ".claude", "existing", ".readme-studio", ".profile-studio", ".eval", ".git", "node_modules")
 
 
 def find_readme(ws: Path, hint: str | None) -> Path | None:
@@ -54,7 +54,7 @@ def tree_hash(path: Path) -> str:
 
 def grade(case: str, ws: Path, hint: str | None = None) -> dict:
     spec = next(e for e in json.loads((ROOT / "evals" / "evals.json").read_text())["evals"] if e["id"] == case)
-    readme = find_readme(ws, hint)
+    readme = find_readme(ws, hint or spec.get("readme"))
     results = []
 
     def add(name, passed, detail=""):
@@ -66,7 +66,7 @@ def grade(case: str, ws: Path, hint: str | None = None) -> dict:
     if md:
         buf = io.StringIO()
         with redirect_stdout(buf):
-            code = check_profile.main([str(readme)])
+            code = check_readme.main([str(readme)])
         report_text = buf.getvalue()
     for a in spec["assertions"]:
         if "auto" not in a:
@@ -76,7 +76,7 @@ def grade(case: str, ws: Path, hint: str | None = None) -> dict:
             add(kind, bool(md), str(readme.relative_to(ws)) if md else "no README produced")
         elif not md:
             add(kind, False, "no README")
-        elif kind == "check_profile_no_errors":
+        elif kind == "check_readme_no_errors":
             m = re.search(r"result: (\d+) errors, (\d+) warnings", report_text)
             add(kind, m and m.group(1) == "0", m.group(0) if m else "checker did not run")
         elif kind == "no_template_defaults":
@@ -121,6 +121,19 @@ def grade(case: str, ws: Path, hint: str | None = None) -> dict:
             pattern = r'(?:src|srcset)="\./?([^"#]+\.svg)' if kind == "uses_svg" else r'(?:src|srcset)="\./?([^"#]+\.(?:svg|png|jpg|jpeg|gif|webp))'
             local = {m for m in re.findall(pattern, md) if not m.startswith("http")}
             add(f"{kind} >= {a['min']}", len(local) >= a["min"], ", ".join(sorted(local))[:200])
+        elif kind == "cli_flags_exist":
+            code = (ws / a["source"]).read_text()
+            blocks = "\n".join(re.findall(r"```.*?```|`[^`]+`", md, re.S))
+            flags = sorted(set(re.findall(r"(?<![\w-])(--[a-z][a-z0-9-]*)", blocks)))
+            missing = [f for f in flags if f not in code and f not in ("--help", "--version")]
+            add("every CLI flag shown exists in the code", not missing, f"shown {flags}; missing {missing}")
+        elif kind == "has_image":
+            n = len(re.findall(r"<img\b|!\[[^\]]*\]\(", md))
+            add("README shows at least one image", n > 0, f"{n} images")
+        elif kind == "no_relative_images":
+            rel = [u for u in re.findall(r'(?:src|srcset)="([^"]+)"|!\[[^\]]*\]\(([^)\s]+)', md) for u in u if u
+                   and not u.startswith(("http", "data:"))]
+            add("no relative image paths (registry-safe)", not rel, ", ".join(rel)[:200])
         elif kind == "existing_untouched":
             fixture = ROOT / "evals" / "fixtures" / case / "existing"
             add("./existing untouched", tree_hash(fixture) == tree_hash(ws / "existing"))
@@ -129,7 +142,7 @@ def grade(case: str, ws: Path, hint: str | None = None) -> dict:
     manual = [a["manual"] for a in spec["assertions"] if "manual" in a]
     out = {"case": case, "workspace": str(ws), "readme": str(readme) if readme else None,
            "passed": sum(r["passed"] for r in results), "total": len(results), "results": results,
-           "manual": manual, "check_profile": report_text}
+           "manual": manual, "check_readme": report_text}
     (ws / ".eval").mkdir(exist_ok=True)
     (ws / ".eval" / "grade.json").write_text(json.dumps(out, indent=2, ensure_ascii=False))
     return out

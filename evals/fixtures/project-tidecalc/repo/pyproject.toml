@@ -1,0 +1,10 @@
+[project]
+name = "tidecalc"
+version = "0.4.1"
+description = "Tide predictions from harmonic constituents, in pure Python."
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "Mara Okonkwo"}]
+
+[project.scripts]
+tidecalc = "tidecalc.cli:main"

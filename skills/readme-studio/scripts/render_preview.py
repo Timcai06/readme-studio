@@ -2,7 +2,7 @@
 """Build a local preview page of a profile README: light, dark and phone width.
 
 Usage:
-    python3 render_preview.py README.md [--out .profile-studio/preview.html] [--context user/user]
+    python3 render_preview.py README.md [--out .readme-studio/preview.html] [--context user/user]
 
 The HTML comes from GitHub's own Markdown API when online (so the sanitizer
 is real), styled with the public github-markdown-css stylesheet. Offline, the
@@ -28,7 +28,7 @@ from pathlib import Path
 
 sys.dont_write_bytecode = True  # keep the skill folder clean
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from check_profile import github_render  # noqa: E402
+from check_readme import github_render  # noqa: E402
 
 
 def offline_render(md: str) -> str:
@@ -170,7 +170,7 @@ def main(argv=None) -> int:
     ap.add_argument("--context", help="owner/repo, e.g. octocat/octocat")
     a = ap.parse_args(argv)
     readme = a.readme.resolve()
-    out = (a.out or readme.parent / ".profile-studio" / "preview.html").resolve()
+    out = (a.out or readme.parent / ".readme-studio" / "preview.html").resolve()
     out.parent.mkdir(parents=True, exist_ok=True)
     source = readme.read_text(encoding="utf-8")
     try:
@@ -180,7 +180,7 @@ def main(argv=None) -> int:
     except (urllib.error.URLError, TimeoutError) as err:
         rendered = offline_render(source)
         banner = (f"OFFLINE ({err}): rough local Markdown conversion. GitHub's sanitizer was NOT applied — "
-                  "style/class/script would still show here but are stripped on GitHub. Run check_profile.py.")
+                  "style/class/script would still show here but are stripped on GitHub. Run check_readme.py.")
     rendered = fix_urls(rendered, readme.parent, out.parent)
     html = page(resolve_theme(rendered, "light"), resolve_theme(rendered, "dark"), banner,
                 f"Preview · {readme.parent.name}")

@@ -7,10 +7,10 @@ Run every applicable check. Report each result as **passed**, **failed (fixed)**
 ## 1. Automated
 
 ```bash
-python3 scripts/check_profile.py README.md                       # always (offline)
-python3 scripts/check_profile.py README.md --render --context <user>/<user> --save-html .profile-studio/github.html   # when online
-python3 scripts/check_profile.py README.md --online              # when online: every external URL
-python3 scripts/check_profile.py README.md --baseline .profile-studio/original/README.md   # Improve mode
+python3 scripts/check_readme.py README.md                       # always (offline)
+python3 scripts/check_readme.py README.md --render --context <user>/<user> --save-html .readme-studio/github.html   # when online
+python3 scripts/check_readme.py README.md --online              # when online: every external URL
+python3 scripts/check_readme.py README.md --baseline .readme-studio/original/README.md   # Improve mode
 python3 scripts/svg_kit.py lint assets/*.svg
 python3 scripts/render_preview.py README.md --context <user>/<user>   # light / dark / phone preview page
 ```
@@ -34,6 +34,13 @@ The command is only an example; use the profile repo's own generator. No diff me
 - [ ] Contact channels are exactly the ones the user approved.
 - [ ] Improve mode: everything on the user's keep-list is still present, verbatim where they asked.
 
+## 2b. Project READMEs
+
+- [ ] Every command, flag, import path, option and example matches the code or manifest; examples are runnable as written.
+- [ ] In-page links (`#section`) resolve (the checker warns on misses); changed headings in Improve mode are listed with their old anchors.
+- [ ] Published to a registry? Run `check_readme.py --portable` and state that registry rendering is not verified unless you looked.
+- [ ] Badges carry real, current facts (CI, version, licence); none point at missing workflows.
+
 ## 3. Rendering and legibility (engineering, not taste)
 
 Use the preview page. Inspect DOM and SVG geometry if you can't view images. Screenshot review is optional unless the user asks for visual verification.
@@ -46,7 +53,7 @@ Use the preview page. Inspect DOM and SVG geometry if you can't view images. Scr
 ## 4. Publishing readiness (don't publish, just check)
 
 - [ ] Files are local. Nothing committed or pushed unless the user said so explicitly in this session.
-- [ ] `.profile-studio/` (brief, snapshot, previews, originals) is listed in `.gitignore`, or the user chose to commit it.
+- [ ] `.readme-studio/` (brief, snapshot, previews, originals) is listed in `.gitignore`, or the user chose to commit it.
 - [ ] No local absolute paths, `localhost` URLs, tokens, private emails or screenshots with browser chrome (the checker covers most; read the images yourself).
 - [ ] Assets within budget (SVG ≤ ~300 KB, photos ≤ ~800 KB, page total ≤ ~6 MB).
 
@@ -60,11 +67,11 @@ The Markdown API proves the sanitizer result. It does not show github.com's CSS:
 ## Checks
 | Check | Result |
 |---|---|
-| check_profile.py (static) | passed — 0 errors, 2 warnings (explained below) |
+| check_readme.py (static) | passed — 0 errors, 2 warnings (explained below) |
 | GitHub sanitizer (--render) | passed — 14 images, 2 folds kept, nothing escaped |
 | External links (--online) | not verified — offline |
 | SVG lint | passed (4 files, 38–212 KB) |
-| Light / dark / phone preview | generated at .profile-studio/preview.html |
+| Light / dark / phone preview | generated at .readme-studio/preview.html |
 | Design | not judged by these checks: for the owner to review |
 | Real github.com page | not verified — not published |
 ```

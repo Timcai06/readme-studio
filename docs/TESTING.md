@@ -1,16 +1,32 @@
 # Testing report
 
+## 0. v0.3 update (2026-10-12): rename to readme-studio, project READMEs
+
+| Check | Result |
+|---|---|
+| Official validator, repo validator | **pass** |
+| Unit tests | **pass**, 24 tests (adds in-page anchors, root-relative paths, `--portable`, GitHub slug, typewriter) |
+| `github_snapshot.py --repo` live (`octocat/Hello-World`, `sindresorhus/slugify`) | **pass** (manifests, folders, CI workflows, README collected) |
+| Trigger test, Codex, 11 queries (4 profile, 2 project README → trigger; typo fix, changelog, docs site, portfolio site, CI workflow → don't) | **11/11** |
+| Project case `project-tidecalc` (runnable fictional library), Codex, 3 runs | Content: every flag and example verified against code (we re-ran the examples: identical); honest limits; found a real packaging gap. **Visual: all three runs chose text-only.** Run 2 justified it in the brief ("a plot would imply a plotting feature"); run 3 skipped the brief. Open question, see below. |
+| antfu profile concept (real public account, local only), Codex, after the material-study / page-system / opening rules | Animated identity opening generated with `svg_kit.typewriter()`, real compform frames used with licence notes, 11/11 original links kept, GitHub sanitizer clean. Visual judgement: owner. |
+
+**Open:** for very small projects whose output is text, agents keep choosing text-only READMEs even when a figure from real output is possible. The skill now demands a named reason. Whether to make a figure mandatory is a product decision, not yet taken.
+
+---
+
+
 Run on 2026-10-12 on macOS, by the maintainers. Every result below was actually run. Anything not run is listed under "Not verified". Re-run everything with the commands in §6.
 
 ## 1. Package and scripts
 
 | Check | Result |
 |---|---|
-| Official validator `uvx --from skills-ref agentskills validate skills/github-profile-studio` (skills-ref 0.1.1) | **pass** ("Valid skill") |
+| Official validator `uvx --from skills-ref agentskills validate skills/readme-studio` (skills-ref 0.1.1) | **pass** ("Valid skill") |
 | `python3 tools/validate_skill.py` (name/dir match, description ≤ 1024 and contains "Use when", SKILL.md < 500 lines and ~5k tokens, every referenced file exists one level deep, every reference is mentioned in SKILL.md, all scripts `--help`) | **pass**, 0 problems. SKILL.md ≈ 1.8k tokens |
 | `python3 -m unittest discover -s tests` | **pass**, 19 tests (checker rules, render-comparison, SVG lint/measure/escape, snapshot ranking, mosaic + mat geometry) |
 | `github_snapshot.py octocat` against the live API (authenticated, then anonymous) | **pass**: 8 repos, forks flagged, pinned = [] with token / unknown without, 17 and 8 API calls |
-| `check_profile.py --render` on the maintainer's own published profile (230 lines, 74 images, 7 folds) | **pass**: 0 errors, 0 warnings, all images and folds survive the real sanitizer |
+| `check_readme.py --render` on the maintainer's own published profile (230 lines, 74 images, 7 folds) | **pass**: 0 errors, 0 warnings, all images and folds survive the real sanitizer |
 | Sanitizer probe (every tag in `references/github-rendering.md` §1) through `POST /markdown` | done. The table in the reference *is* this result |
 
 ## 2. Scenario runs with fresh agents
@@ -36,7 +52,7 @@ Round 1 showed the content work was right but the visuals were too cautious. The
 
 | Check | Result |
 |---|---|
-| `check_profile.py --render` (GitHub's real sanitizer) on all 6 example READMEs | **pass**: 0 errors, 0 warnings; every image and fold kept |
+| `check_readme.py --render` (GitHub's real sanitizer) on all 6 example READMEs | **pass**: 0 errors, 0 warnings; every image and fold kept |
 | `svg_kit.py lint` on the 10 generated SVGs | **pass** |
 | Generators re-run → byte-identical assets (5 generator scripts) | **pass** (reproducible) |
 | SVG text geometry in Chromium (getBBox: text outside canvas / overlapping) | 5 files clean; `creative-codex/cover.svg` reports bounding-box overlap of two stacked 116 px display lines (tight leading). Needs a visual look; may be intended. |
@@ -65,7 +81,7 @@ Fresh read-only Codex workspace per query, skill installed, "plan only":
 |---|---|---|---|---|---|
 | Codex CLI 0.160.0 | `.agents/skills/` | ✅ | ✅ 8/8 | ✅ 7 runs | Reads the user's global AGENTS/skills too (environment bleed: one run consulted an unrelated browser skill). |
 | OpenCode 1.18.35 | `.agents/skills/` | ✅ | ⚠️ 2/3 runs | ✅ 1 run, ⚠️ 1 run, 1 aborted by us | With `--pure` (plugins off) and the free model, the skill was not loaded and the agent printed a README in chat instead of writing files. One early run was aborted because we edited the runner mid-run. |
-| Claude Code 2.1.288 | `.claude/skills/` | ✅ (`github-profile-studio` in the session's skill list) | — | **not verified** | Headless CLI login on the test machine had expired ("OAuth session expired"); re-run `evals/run_case.sh claude <case>` after `claude /login`. |
+| Claude Code 2.1.288 | `.claude/skills/` | ✅ (`readme-studio` in the session's skill list) | — | **not verified** | Headless CLI login on the test machine had expired ("OAuth session expired"); re-run `evals/run_case.sh claude <case>` after `claude /login`. |
 | Gemini CLI 0.45.0 | `.agents/skills/` | **not verified** | — | — | Could not reach Google's auth endpoint from the test network (TLS reset). |
 | Cursor | `.agents/skills/` or `.cursor/skills/` | **not verified** | — | — | Not installed on the test machine. Cursor documents both paths. |
 
@@ -82,7 +98,7 @@ Format compatibility (spec-valid frontmatter, relative paths, no client-specific
 ## 7. Reproduce
 
 ```bash
-uvx --from skills-ref agentskills validate skills/github-profile-studio
+uvx --from skills-ref agentskills validate skills/readme-studio
 python3 tools/validate_skill.py
 python3 -m unittest discover -s tests -v
 python3 evals/make_fixtures.py

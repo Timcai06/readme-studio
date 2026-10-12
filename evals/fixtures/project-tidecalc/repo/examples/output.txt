@@ -1,0 +1,8 @@
+$ tidecalc predict examples/harbour.csv --hours 12 --step 3
+  0.0h  -1.017 m
+  3.0h  +1.389 m
+  6.0h  +0.932 m
+  9.0h  -1.400 m
+ 12.0h  -0.958 m
+$ tidecalc predict examples/harbour.csv --hours 48 --step 0.5 --spark
+▂▃▄▅▅▆▆▇▇▇▇▆▆▅▄▃▃▂▂▁▁▁▁▂▂▃▄▅▅▆▇▇▇▇▇▇▆▆▅▄▃▂▂▁▁▁▁▁▁▂▃▃▄▅▆▆▇▇▇▇▆▆▅▅▄▃▂▂▁▁▁▁▁▂▃▃▄▅▆▇▇▇█▇▇▇▆▅▄▃▃▂▁▁▁▁▁

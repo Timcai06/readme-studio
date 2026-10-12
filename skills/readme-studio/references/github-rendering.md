@@ -3,7 +3,7 @@
 Read this before writing any HTML in a README, and again when something "works locally but not on GitHub".
 
 Status labels used below:
-- **Verified (API)**: checked by posting a probe file to `POST /markdown` (`mode=gfm`), the sanitizer GitHub uses for READMEs, on 2026-10-12. Re-run `scripts/check_profile.py README.md --render` to check your own file.
+- **Verified (API)**: checked by posting a probe file to `POST /markdown` (`mode=gfm`), the sanitizer GitHub uses for READMEs, on 2026-10-12. Re-run `scripts/check_readme.py README.md --render` to check your own file.
 - **Verified (live page)**: seen working on a published profile README.
 - **Documented**: stated in GitHub's docs, not re-tested here.
 - **Known behaviour**: established practice that the API cannot show (it is CSS or client-side). Check it on a real page when it matters.
@@ -55,13 +55,18 @@ Inside HTML blocks, prefer HTML (`<b>`, `<a>`, `<img>`) and you never hit this.
 
 ## 3. Images and SVG on GitHub
 
-- Relative paths (`./assets/x.svg`) resolve inside the profile repository. Paths are **case-sensitive** on GitHub but often not on your disk. `check_profile.py` catches the mismatch.
+- Relative paths (`./assets/x.svg`) resolve inside the repository, on the current branch. A leading `/` resolves from the repository root (Documented). Paths are **case-sensitive** on GitHub but often not on your disk. `check_readme.py` catches the mismatch.
 - An SVG shown through `<img>` cannot run scripts, cannot load external files (fonts, images, CSS) and should not use `<foreignObject>`. CSS `@keyframes` and SMIL animations inside the SVG do play. Animated third-party SVGs such as typing banners rely on this (Verified, live page).
 - Text inside SVG uses the viewer's installed fonts. Use system font stacks (`scripts/svg_kit.py: FONTS`). Expect width differences of ±10% between macOS, Windows and Linux.
 - Large embedded rasters make huge SVGs. In the origin project, 1.6–3.5 MB editor SVGs dropped to 52–145 KB after quantizing the embedded background to 8 colours. Budget about ≤ 300 KB per SVG and ≤ 800 KB per photo/JPEG.
 - GIF/APNG/WebP animation plays. Video does not, except as an uploaded `user-images` attachment URL, which only works if the user uploads it themselves.
 
-## 4. Profile-README specifics (Documented)
+## 4. Where READMEs are shown (Documented)
+
+- Repository README: GitHub picks it from `.github/`, then the root, then `docs/`. Content beyond 500 KiB is truncated. GitHub builds an outline (table of contents) from the headings, and every heading gets an anchor.
+- Package registries render the same file with their own rules; see `project-readme.md` §5.
+
+**Profile READMEs:**
 
 - The README shows on `github.com/<username>` when a **public** repository named exactly `<username>` has a `README.md` in its root. GitHub offers to create it with a README when you make that repo.
 - Organisation profiles are different: a public `.github` repository with `profile/README.md`. Member-only versions go in `.github-private`.

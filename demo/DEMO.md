@@ -5,7 +5,7 @@
 ## 0. 录屏前准备（不入镜）
 
 ```bash
-cd ~/DEV/github-profile-studio
+cd ~/DEV/readme-studio
 ```
 
 ```bash
@@ -27,7 +27,7 @@ cd ~/gps-demo
 ```
 
 ```bash
-python3 .agents/skills/github-profile-studio/scripts/render_preview.py profile/README.md --out before.html && open before.html
+python3 .agents/skills/readme-studio/scripts/render_preview.py profile/README.md --out before.html && open before.html
 ```
 
 画面：浅色、深色、手机三栏的「Before」。这是 GitHub 渲染接口输出的真实 HTML。
@@ -37,7 +37,7 @@ python3 .agents/skills/github-profile-studio/scripts/render_preview.py profile/R
 ## 2. 安装 Skill（约 15 秒）
 
 ```bash
-ls .agents/skills/github-profile-studio
+ls .agents/skills/readme-studio
 ```
 
 画面：`SKILL.md`、`references/`、`scripts/`、`assets/`。
@@ -53,23 +53,23 @@ codex
 或者用 `claude`。然后粘贴 `request.md` 的内容。提示词里**没有点 Skill 的名字**，靠描述自动触发，这一点值得在镜头里强调。
 
 依次留意这些镜头：
-1. Agent 宣布使用 github-profile-studio，读取 SKILL.md。
+1. Agent 宣布使用 readme-studio，读取 SKILL.md。
 2. 读 `snapshot.json` 和旧 README，建立证据账本（evidence ledger）。
 3. 提出三个视觉概念，选定一个并说明理由。我们这次的实际输出是「map margin」：等高线和河流。
 4. 写生成脚本 `tools/build_assets.py`，产出浅色、深色两套 SVG。
-5. 跑检查：`check_profile.py`（含 `--baseline` 对比旧版）、`svg_kit.py lint`。
+5. 跑检查：`check_readme.py`（含 `--baseline` 对比旧版）、`svg_kit.py lint`。
 6. 交付报告：做了什么、删了什么、哪些没验证。
 
 ## 4. 结果（约 30 秒）
 
 ```bash
-python3 .agents/skills/github-profile-studio/scripts/render_preview.py profile/README.md --out after.html && open after.html
+python3 .agents/skills/readme-studio/scripts/render_preview.py profile/README.md --out after.html && open after.html
 ```
 
 画面：`before.html` 和 `after.html` 左右对比，再切换浅色和深色两栏。
 
 ```bash
-cat profile/.profile-studio/brief.md
+cat profile/.readme-studio/brief.md
 ```
 
 画面：证据账本、三个候选概念、删减清单。旁白可以说「它解释了为什么这样设计」。

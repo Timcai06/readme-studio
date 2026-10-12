@@ -1,5 +1,5 @@
 {
-  "skill_name": "github-profile-studio",
+  "skill_name": "readme-studio",
   "note": "Fixtures are fictional personas (evals/make_fixtures.py). Assertions marked auto are checked by evals/grade.py; manual ones are reviewed by a person reading the output and transcript.",
   "evals": [
     {
@@ -11,7 +11,7 @@
           "auto": "readme_exists"
         },
         {
-          "auto": "check_profile_no_errors"
+          "auto": "check_readme_no_errors"
         },
         {
           "auto": "no_template_defaults",
@@ -73,7 +73,7 @@
           "auto": "readme_exists"
         },
         {
-          "auto": "check_profile_no_errors"
+          "auto": "check_readme_no_errors"
         },
         {
           "auto": "no_template_defaults"
@@ -129,7 +129,7 @@
           "auto": "readme_exists"
         },
         {
-          "auto": "check_profile_no_errors"
+          "auto": "check_readme_no_errors"
         },
         {
           "auto": "no_shields_badges"
@@ -169,7 +169,7 @@
           "auto": "readme_exists"
         },
         {
-          "auto": "check_profile_no_errors"
+          "auto": "check_readme_no_errors"
         },
         {
           "auto": "existing_untouched"
@@ -207,7 +207,7 @@
           "auto": "readme_exists"
         },
         {
-          "auto": "check_profile_no_errors"
+          "auto": "check_readme_no_errors"
         },
         {
           "auto": "no_template_defaults"
@@ -228,6 +228,58 @@
         },
         {
           "manual": "theme handling: picture pairs or self-contained plates"
+        }
+      ]
+    },
+    {
+      "id": "project-tidecalc",
+      "prompt_file": "fixtures/project-tidecalc/request.md",
+      "readme": "repo/README.md",
+      "expected_output": "A project README for a small real Python library: one-line value + real proof near the top (quoted CLI output or sparkline from examples/output.txt), install, quick start that matches the code, honest scope, PyPI-safe images, no invented features.",
+      "assertions": [
+        {
+          "auto": "readme_exists"
+        },
+        {
+          "auto": "check_readme_no_errors"
+        },
+        {
+          "auto": "no_template_defaults"
+        },
+        {
+          "auto": "mentions",
+          "values": [
+            "tidecalc predict",
+            "pip install tidecalc"
+          ]
+        },
+        {
+          "auto": "cli_flags_exist",
+          "source": "repo/src/tidecalc/cli.py"
+        },
+        {
+          "auto": "has_image",
+          "why": "real output (the tide curve) should be seen, not only quoted"
+        },
+        {
+          "auto": "no_relative_images",
+          "why": "published to PyPI"
+        },
+        {
+          "auto": "no_inflation",
+          "values": [
+            "blazing",
+            "fastest",
+            "production-ready",
+            "enterprise",
+            "state-of-the-art"
+          ]
+        },
+        {
+          "manual": "real output quoted from examples/output.txt, not invented"
+        },
+        {
+          "manual": "opening = name + one-line value + immediate proof, not a profile-style typed name"
         }
       ]
     }

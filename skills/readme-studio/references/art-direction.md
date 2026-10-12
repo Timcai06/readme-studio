@@ -1,6 +1,6 @@
 # Art direction: from the work to a whole-page system
 
-This file is about judgment, not presets. Its input is the brief's **Material notes** (`material-study.md`), not a list of keywords. Its output is a **page system**: one set of shared rules that every section follows, with room for each project to look like itself.
+This file is about judgment, not presets. Its input is the brief's **Material notes** (`material-study.md`), not a list of keywords. Its output is a **page system**: one set of shared rules that every section follows, with room for each project (or, on a project README, each capability or part) to look like itself. Where this file says "person", read "project" for project READMEs.
 
 ## 1. Concept candidates are page sketches, not names
 

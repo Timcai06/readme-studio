@@ -7,8 +7,8 @@
 #
 # Creates an isolated workspace (default: evals/runs/<case>-<agent>-<UTC time>),
 # copies the fixture and installs the skill at project level:
-#   claude   -> .claude/skills/github-profile-studio
-#   others   -> .agents/skills/github-profile-studio
+#   claude   -> .claude/skills/readme-studio
+#   others   -> .agents/skills/readme-studio
 # The prompt is request.md verbatim. It never names the skill: whether the agent
 # picks the skill up from its description is part of the test.
 # Transcript: <workspace>/.eval/transcript.*  Result: files in <workspace>.
@@ -23,7 +23,7 @@ mkdir -p "$ws/.eval"
 cp -R "$fixture/." "$ws/"
 if [ "$agent" = claude ]; then dest="$ws/.claude/skills"; else dest="$ws/.agents/skills"; fi
 mkdir -p "$dest"
-cp -R "$root/skills/github-profile-studio" "$dest/"
+cp -R "$root/skills/readme-studio" "$dest/"
 prompt=$(cat "$fixture/request.md")
 cd "$ws"
 git init -q . 2>/dev/null || true   # some agents treat the git root as the project root

@@ -1,4 +1,6 @@
-# Content architecture: what to show, in what order, at what density
+# Content architecture (profiles): what to show, in what order, at what density
+
+For project READMEs, the reader and order differ: see `project-readme.md` §1. §4 (copy), §5 (folds) and §6 (cutting) below apply to both.
 
 Output of this stage: a section plan in the brief. It lists each section's job, what goes in it, what is visible and what is folded, and a cut list.
 

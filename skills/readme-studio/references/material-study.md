@@ -1,6 +1,6 @@
 # Material study: look at the work before designing anything
 
-Discovery (`discovery.md`) tells you what is **true**. This step tells you what the work **looks and behaves like**. These are different jobs. Reading a README finishes the first and barely starts the second: a README describes a project in words, and the profile has to show it.
+Discovery (`discovery.md`) tells you what is **true**. This step tells you what the work **looks and behaves like**. These are different jobs. Reading a README finishes the first and barely starts the second: a README describes a project in words, and the page has to show it. For a project README, the project itself is the lead item.
 
 Do this for the lead projects (and any series or practice that will get its own layer). Skip archive items.
 
@@ -46,6 +46,6 @@ Each of these is specific to this person by construction. A field of abstract sh
 
 ## 4. How much is enough
 
-Enough material means you can say, for each lead item, what a visitor would see and why it could only be this project. The aim is not a quota of screenshots: one well-chosen real artefact or one faithful structural drawing per lead item is often plenty. A strong text-led page is a valid outcome when the material study shows the work is best expressed in words. Say so in the brief.
+Enough material means you can say, for each lead item, what a visitor would see and why it could only be this project. The aim is not a quota of screenshots: one well-chosen real artefact or one faithful structural drawing per lead item is often plenty. A text-led page is a valid outcome only when the material study shows the work is truly best expressed in words (an essay collection, a spec, a poem generator whose output *is* text set well). Say why in the brief. "It's small" is not that reason: small projects with real output usually have one strong figure in them.
 
 Record the study in the brief's **Material notes** table, then go to concepts (`art-direction.md`). Anything you mark **usable** is a commitment: later steps either place it or record why it was dropped.

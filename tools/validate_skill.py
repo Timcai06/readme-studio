@@ -9,7 +9,7 @@
 - every relative file SKILL.md mentions exists, one level deep
 - bundled scripts compile and show --help without third-party packages
 Standard library only. For the official validator also run:
-    uvx --from skills-ref agentskills validate skills/github-profile-studio
+    uvx --from skills-ref agentskills validate skills/readme-studio
 """
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILL = ROOT / "skills" / "github-profile-studio"
+SKILL = ROOT / "skills" / "readme-studio"
 errors: list[str] = []
 
 

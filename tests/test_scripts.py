@@ -12,10 +12,10 @@ import unittest
 from contextlib import redirect_stdout
 from pathlib import Path
 
-SCRIPTS = Path(__file__).resolve().parents[1] / "skills" / "github-profile-studio" / "scripts"
+SCRIPTS = Path(__file__).resolve().parents[1] / "skills" / "readme-studio" / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
-import check_profile  # noqa: E402
+import check_readme  # noqa: E402
 import github_snapshot  # noqa: E402
 import svg_kit  # noqa: E402
 
@@ -29,7 +29,7 @@ except ImportError:
 def run_check(readme: Path, *extra) -> tuple[int, str]:
     buf = io.StringIO()
     with redirect_stdout(buf):
-        code = check_profile.main([str(readme), *extra])
+        code = check_readme.main([str(readme), *extra])
     return code, buf.getvalue()
 
 
@@ -104,30 +104,55 @@ class CheckProfileTests(unittest.TestCase):
         self.assertIn("GitHub stats card", out)
         self.assertIn("me@example.org", out)
 
+    def test_in_page_anchor_links(self):
+        code, out = run_check(self.write("## Quick start\n\n## API\n\n[go](#quick-start) [bad](#install) "
+                                         '<a href="#api">api</a> <a name="legacy"></a> [old](#legacy)\n'))
+        self.assertIn("#install matches no heading", out)
+        self.assertNotIn("#quick-start matches", out)
+        self.assertNotIn("#legacy matches", out)
+
+    def test_root_relative_paths_resolve_from_repo_root(self):
+        (self.dir / ".git").mkdir()
+        (self.dir / "docs").mkdir()
+        (self.dir / "assets" / "logo.svg").write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"/>')
+        readme = self.dir / "docs" / "README.md"
+        readme.write_text('<img src="/assets/logo.svg" alt="logo"><img src="/assets/nope.svg" alt="x">\n')
+        code, out = run_check(readme)
+        self.assertIn("missing local file: /assets/nope.svg", out)
+        self.assertNotIn("missing local file: /assets/logo.svg", out)
+
+    def test_portable_flags_registry_breakers(self):
+        (self.dir / "assets" / "a.png").write_bytes(b"\x89PNG")
+        code, out = run_check(self.write('<picture><source media="(prefers-color-scheme: dark)" srcset="./assets/a.png">'
+                                         '<img src="./assets/a.png" alt="a"></picture>\n'), "--portable")
+        self.assertIn("relative image ./assets/a.png may break", out)
+        self.assertIn("<picture> theme switching is GitHub-specific", out)
+
     def test_baseline_reports_removed_items(self):
         old = self.dir / "old.md"
         old.write_text('<img src="https://x.test/cat.gif" alt="cat">\n## Reading list\n', encoding="utf-8")
         code, out = run_check(self.write("## Something else\n"), "--baseline", str(old))
         self.assertIn("cat.gif", out)
         self.assertIn("reading list", out)
+        self.assertIn("#reading-list", out)
 
 
 class RenderComparisonTests(unittest.TestCase):
     def test_escaped_tags_in_code_are_not_errors(self):
         html = '<pre><code>&lt;you&gt;</code></pre><p>&lt;script&gt;x&lt;/script&gt;</p>'
-        original = check_profile.github_render
-        check_profile.github_render = lambda md, ctx: html
+        original = check_readme.github_render
+        check_readme.github_render = lambda md, ctx: html
         try:
             with tempfile.TemporaryDirectory() as tmp:
                 readme = Path(tmp) / "README.md"
                 readme.write_text("```\n<you>\n```\n<script>x</script>\n", encoding="utf-8")
-                report = check_profile.Report()
-                check_profile.render_checks(readme, report, None, None)
+                report = check_readme.Report()
+                check_readme.render_checks(readme, report, None, None)
             msgs = " ".join(i["message"] for i in report.items)
             self.assertIn("<script>", msgs)
             self.assertNotIn("<you>", msgs)
         finally:
-            check_profile.github_render = original
+            check_readme.github_render = original
 
 
 class SvgKitTests(unittest.TestCase):
@@ -180,6 +205,13 @@ class SvgKitTests(unittest.TestCase):
         self.assertIn("&amp;", out)
         self.assertIn("PingFang SC", out)
         self.assertIn("&lt;t&gt;", out)
+
+
+class SlugTests(unittest.TestCase):
+    def test_github_slug(self):
+        self.assertEqual(check_readme.github_slug("Quick Start!"), "quick-start")
+        self.assertEqual(check_readme.github_slug("`npm` & **Yarn**"), "npm--yarn")
+        self.assertEqual(check_readme.github_slug("中文 标题"), "中文-标题")
 
 
 class SnapshotTests(unittest.TestCase):

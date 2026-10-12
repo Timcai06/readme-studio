@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Check a GitHub profile README (and its local assets) before delivery.
+"""Check a GitHub README (profile or project) and its local assets before delivery.
 
 Usage:
-    python3 check_profile.py README.md                 # static checks, offline
-    python3 check_profile.py README.md --render        # + GitHub's real sanitizer (network)
-    python3 check_profile.py README.md --online        # + fetch every external URL
-    python3 check_profile.py README.md --baseline old/README.md   # Improve mode: what disappeared?
-    python3 check_profile.py README.md --json report.json
+    python3 check_readme.py README.md                 # static checks, offline
+    python3 check_readme.py README.md --render        # + GitHub's real sanitizer (network)
+    python3 check_readme.py README.md --online        # + fetch every external URL
+    python3 check_readme.py README.md --baseline old/README.md   # Improve mode: what disappeared?
+    python3 check_readme.py README.md --portable      # also published to npm/PyPI/…: GitHub-only constructs
+    python3 check_readme.py README.md --json report.json
 
 Severities: error (broken on GitHub or unsafe to publish), warning (likely a
 mistake or has no effect), info (inventory a human should glance at).
@@ -166,6 +167,40 @@ def exists_case_sensitive(base: Path, rel: str) -> tuple[bool, str | None]:
     return True, None
 
 
+def repo_root(start: Path) -> Path:
+    for p in [start, *start.parents]:
+        if (p / ".git").exists():
+            return p
+    return start
+
+
+def github_slug(heading: str) -> str:
+    """GitHub's heading anchor: lowercase, drop punctuation except - and _, spaces to hyphens."""
+    text = re.sub(r"<[^>]+>", "", heading)
+    text = re.sub(r"[`*_~]|\[([^\]]*)\]\([^)]*\)", lambda m: m.group(1) or "", text)
+    text = text.strip().lower()
+    text = re.sub(r"[^\w\- ]", "", text, flags=re.UNICODE)
+    return text.replace(" ", "-")
+
+
+def anchors_in(text: str, col: "Collector") -> set[str]:
+    seen: dict[str, int] = {}
+    anchors = set()
+    headings = re.findall(r"^\s{0,3}#{1,6}\s+(.+?)\s*#*\s*$", text, re.M)
+    headings += re.findall(r"<h[1-6][^>]*>(.*?)</h[1-6]>", text, re.S | re.I)
+    for h in headings:
+        slug = github_slug(h)
+        n = seen.get(slug, 0)
+        anchors.add(slug if n == 0 else f"{slug}-{n}")
+        seen[slug] = n + 1
+    for kind, tag, attrs, _ in col.events:
+        if kind == "start":
+            for key in ("id", "name"):
+                if attrs.get(key):
+                    anchors.add(attrs[key].lower())
+    return anchors
+
+
 def collect_refs(text: str, collector: Collector):
     """Yield (kind, url, alt_or_text, line) for every image and link."""
     refs = []
@@ -278,17 +313,26 @@ def static_checks(readme: Path, report: Report, max_asset_kb: int):
         if parsed.scheme in ("http", "https", "data"):
             continue
         rel = urllib.parse.unquote(parsed.path)
-        if rel.startswith("/"):
-            report.add("warning", "paths", f"root-relative path {url} resolves against github.com, not the repo; use ./", line)
+        root = base
+        if rel.startswith("/"):  # GitHub resolves "/x" from the repository root
+            root = repo_root(base)
+            rel = rel.lstrip("/")
+        if not rel:
             continue
-        ok, case_issue = exists_case_sensitive(base, rel)
+        ok, case_issue = exists_case_sensitive(root, rel)
         if not ok:
             reported.add(url)
             report.add("error", "paths", f"missing local file: {url}", line)
         elif case_issue:
             report.add("error", "paths", f"{url}: {case_issue}", line)
         else:
-            seen_local.add((base / rel).resolve())
+            seen_local.add((root / rel).resolve())
+    anchors = anchors_in(text, col)
+    for kind, url, label, line in refs:
+        if kind == "link" and url.startswith("#") and len(url) > 1:
+            target = urllib.parse.unquote(url[1:]).lower()
+            if target not in anchors:
+                report.add("warning", "anchors", f"in-page link {url} matches no heading or id", line)
     for kind, url, label, line in images:
         if label is None or (label != "<source>" and label.strip() == ""):
             report.add("warning", "a11y", f"image without alt text: {url[:70]}", line)
@@ -299,10 +343,10 @@ def static_checks(readme: Path, report: Report, max_asset_kb: int):
             kb = path.stat().st_size / 1024
             total_kb += kb
             if kb > max_asset_kb:
-                report.add("warning", "size", f"{path.relative_to(base)}: {kb:.0f} KB (budget {max_asset_kb} KB)")
+                report.add("warning", "size", f"{os.path.relpath(path, base.resolve())}: {kb:.0f} KB (budget {max_asset_kb} KB)")
             if path.suffix.lower() == ".svg":
                 for sev, msg in lint_svg(path, max_kb=max_asset_kb):
-                    report.add(sev, "svg", f"{path.relative_to(base)}: {msg}")
+                    report.add(sev, "svg", f"{os.path.relpath(path, base.resolve())}: {msg}")
     if total_kb > 6000:
         report.add("warning", "size", f"local assets total {total_kb/1024:.1f} MB; first paint will be slow on mobile")
 
@@ -372,7 +416,7 @@ def github_render(markdown: str, context: str | None) -> str:
         payload["context"] = context
     req = urllib.request.Request("https://api.github.com/markdown", data=json.dumps(payload).encode(),
                                  headers={"Accept": "text/html", "Content-Type": "application/json",
-                                          "User-Agent": "github-profile-studio-check",
+                                          "User-Agent": "readme-studio-check",
                                           "X-GitHub-Api-Version": "2022-11-28"})
     token = api_token()
     if token:
@@ -421,7 +465,7 @@ def online_checks(readme: Path, report: Report):
     col.feed(text)
     urls = sorted({u for k, u, *_ in collect_refs(text, col) if u.startswith(("http://", "https://"))})
     for url in urls:
-        req = urllib.request.Request(url, method="GET", headers={"User-Agent": "Mozilla/5.0 github-profile-studio-check"})
+        req = urllib.request.Request(url, method="GET", headers={"User-Agent": "Mozilla/5.0 readme-studio-check"})
         try:
             with urllib.request.urlopen(req, timeout=15) as resp:
                 status = resp.status
@@ -440,6 +484,24 @@ def online_checks(readme: Path, report: Report):
     report.add("info", "links", f"checked {len(urls)} external URLs")
 
 
+def portable_checks(readme: Path, report: Report):
+    """For READMEs also published to package registries (npm, PyPI, crates.io, marketplaces)."""
+    text = strip_code(readme.read_text(encoding="utf-8"))
+    col = Collector()
+    col.feed(text)
+    rel_images = sorted({u for k, u, *_ in collect_refs(text, col)
+                         if k == "image" and u and not re.match(r"^(https?:|data:)", u)})
+    for u in rel_images:
+        report.add("warning", "portable", f"relative image {u} may break on package registries; "
+                   "use an absolute URL pinned to a tag/commit")
+    if col.tags.get("picture"):
+        report.add("warning", "portable", "<picture> theme switching is GitHub-specific; registries show "
+                   "only the fallback <img> (make sure it works on both light and dark pages)")
+    if col.tags.get("details"):
+        report.add("info", "portable", "<details> folds may render expanded or unstyled on some registries")
+    report.add("info", "portable", "registry rendering itself is not verified by this script")
+
+
 def baseline_checks(readme: Path, baseline: Path, report: Report):
     """Improve mode: list every image/link/heading of the original that is gone."""
     def inventory(path):
@@ -455,19 +517,21 @@ def baseline_checks(readme: Path, baseline: Path, report: Report):
         report.add("info", "baseline", f"{kind} from the original is no longer referenced: {url[:100]} "
                    "— confirm this removal was agreed")
     for h in sorted(old_heads - new_heads):
-        report.add("info", "baseline", f"original heading no longer present: '{h[:60]}'")
+        report.add("info", "baseline", f"original heading no longer present: '{h[:60]}' — its #{github_slug(h)} "
+                   "anchor may be linked from elsewhere; keep it or add <a name=\"...\"></a>")
     kept = len(old_refs & new_refs)
     report.add("info", "baseline", f"{kept}/{len(old_refs)} original links/images kept")
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="Check a GitHub profile README before delivery.")
+    ap = argparse.ArgumentParser(description="Check a GitHub README (profile or project) before delivery.")
     ap.add_argument("readme", type=Path)
     ap.add_argument("--render", action="store_true", help="verify with GitHub's Markdown API (network)")
     ap.add_argument("--context", help="owner/repo for rendering context, e.g. octocat/octocat")
     ap.add_argument("--save-html", type=Path, help="with --render: save GitHub's HTML here")
     ap.add_argument("--online", action="store_true", help="request every external URL (network)")
     ap.add_argument("--baseline", type=Path, help="original README, to list removed links/images (Improve mode)")
+    ap.add_argument("--portable", action="store_true", help="also published to a package registry: flag GitHub-only constructs")
     ap.add_argument("--max-asset-kb", type=int, default=1024)
     ap.add_argument("--json", type=Path, help="also write the report as JSON")
     args = ap.parse_args(argv)
@@ -485,6 +549,8 @@ def main(argv=None) -> int:
         online_checks(args.readme, report)
     if args.baseline:
         baseline_checks(args.readme, args.baseline, report)
+    if args.portable:
+        portable_checks(args.readme, report)
 
     order = {"error": 0, "warning": 1, "info": 2}
     print(f"{args.readme}: " + ", ".join(f"{k} {v}" for k, v in summary.items()))

@@ -12,4 +12,4 @@ jobs:
       - run: python tools/validate_skill.py
       - run: python -m unittest discover -s tests -v
       - uses: astral-sh/setup-uv@v6
-      - run: uvx --from skills-ref agentskills validate skills/github-profile-studio
+      - run: uvx --from skills-ref agentskills validate skills/readme-studio

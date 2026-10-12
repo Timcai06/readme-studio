@@ -1,10 +1,12 @@
-# Profile brief — <username>
+# README brief — <username or owner/repo>
 
-> Working file for the agent and the owner. Keep it in `.profile-studio/` (not published).
+> Working file for the agent and the owner. Keep it in `.readme-studio/` (not published).
 > Notes, not essays: a cell or a line per item. The brief exists to make the design better; if it grows past a few screens, you are documenting instead of designing.
 
 ## Mode and assumptions
-- Mode: Create | Improve | Audit
+- Kind: Profile | Project · Job: Create | Improve | Audit
+- Primary reader (project: evaluator / integrator / end user / researcher / contributor):
+- Also published to (npm, PyPI, docs site…):
 - Assumptions made without the owner (confirm or correct):
   - …
 

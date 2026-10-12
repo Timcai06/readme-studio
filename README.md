@@ -1,6 +1,6 @@
-<h1 align="center">GitHub Profile Studio</h1>
+<h1 align="center">README Studio</h1>
 
-<p align="center"><b>An Agent Skill that designs your GitHub profile README the way a careful designer would:<br>by choosing what to say, deciding how to say it, and checking it actually renders.</b></p>
+<p align="center"><b>An Agent Skill that designs GitHub READMEs, for your profile or for any repository, the way a careful designer would:<br>by studying the real work, choosing what to say, building a visual system, and checking it actually renders.</b></p>
 
 <p align="center"><sub>Open <a href="https://agentskills.io/specification">Agent Skills</a> format · tested in Codex CLI and OpenCode · discovered by Claude Code · MIT</sub></p>
 
@@ -15,19 +15,19 @@
 
 ## The problem
 
-Most GitHub profiles come out of the same template: `Hi 👋 I'm …`, a wall of badges, a stats card, a contribution snake. Generators make that faster, but every output still looks like every other one, because the layout *is* the product.
+Most READMEs come out of a template. Project READMEs get a badge row, a feature list of adjectives and an install block. Profiles get: `Hi 👋 I'm …`, a wall of badges, a stats card, a contribution snake. Generators make that faster, but every output still looks like every other one, because the layout *is* the product.
 
-A good profile is the result of decisions:
-- what is true and worth saying;
-- which one or two projects lead;
-- what the page's visual idea is, and why it belongs to this person;
-- what GitHub's renderer will silently delete.
+A good README is the result of decisions:
+- what is true and worth saying (for a project, what the code actually does);
+- what leads: which one or two projects, or which proof of the project;
+- what the page's visual system is, and why it belongs to this person or project;
+- what GitHub (and npm or PyPI) will silently delete.
 
 This skill gives an AI agent the method behind those decisions, so it can make them for *you*.
 
 ## How it differs from a template generator
 
-| | Template generator | GitHub Profile Studio |
+| | Template generator | README Studio |
 |---|---|---|
 | Output | Fixed layout, your name filled in | A layout designed from your work, voice and taste |
 | Content | Everything it can fetch | An evidence ledger. Leads, featured, archive and cut are chosen and justified. No invented skills or metrics. |
@@ -47,11 +47,15 @@ ledger,      lead/featured/  your material,   generator  links, SVG lint, "not v
 ≤5 questions archive/cut     spec, wireframe  scripts    light/dark/phone where true
 ```
 
-It works in two modes. **Create** builds a profile from scratch. **Improve** redesigns an existing one while keeping what you care about. A third, **Audit**, gives a diagnosis only.
+It handles two kinds of README with one method:
+- **Profile README** (`<user>/<user>`, or an org's `.github/profile`). The reader asks "who is this?". The opening is the person, set large, with motion by default.
+- **Project README** (any repository). The reader asks "what is it, and how do I start?". The code is the source of truth, every command is checked against it, and the result stays portable to package registries.
+
+There are three jobs: **Create**, **Improve** (keeps your content, voice, links and heading anchors), and **Audit** (diagnosis only).
 
 ## Install
 
-The skill is the folder [`skills/github-profile-studio`](skills/github-profile-studio). Copy it to wherever your agent looks for skills:
+The skill is the folder [`skills/readme-studio`](skills/readme-studio). Copy it to wherever your agent looks for skills:
 
 | Agent | Project-level | User-level | Tested here |
 |---|---|---|---|
@@ -62,22 +66,26 @@ The skill is the folder [`skills/github-profile-studio`](skills/github-profile-s
 | Gemini CLI | `.agents/skills/`, `.gemini/skills/` | `~/.agents/skills/`, `~/.gemini/skills/` | not tested |
 
 ```bash
-git clone https://github.com/Timcai06/github-profile-studio.git
+git clone https://github.com/Timcai06/readme-studio.git
 ```
 
 ```bash
-mkdir -p ~/.agents/skills && cp -R github-profile-studio/skills/github-profile-studio ~/.agents/skills/
+mkdir -p ~/.agents/skills && cp -R readme-studio/skills/readme-studio ~/.agents/skills/
 ```
 
 For Claude Code, copy it to `~/.claude/skills/` instead (or as well). Requirements: none to load it. Python 3.9+ runs the bundled checks (standard library). Pillow is needed only for image composition. A network connection plus `gh` or a `GITHUB_TOKEN` enables account discovery and real-sanitizer checks. Without them, the skill degrades and labels what it could not verify.
 
 ## Use
 
-Just ask. The skill triggers on profile requests in English or Chinese without being named.
+Just ask. The skill triggers on profile and project README requests in English or Chinese without being named. Simple edits like a typo fix or a changelog don't trigger it.
 
 ```text
 Make my GitHub profile README. My username is <you>. I'm a backend engineer moving into data
 infrastructure; lead with <repo-a> and <repo-b>. Calm, editorial, dark-mode friendly. No stats cards.
+```
+
+```text
+Write a proper README for this repo (./). It's also published to PyPI; readers are students and hobbyists.
 ```
 
 ```text
@@ -91,7 +99,7 @@ What helps it most:
 - **Taste.** Three adjectives, a reference you like, things you dislike. You can name a direction (minimal, editorial, developer-oriented, creative), but treat directions as stances, not templates.
 - **What must stay** (Improve mode).
 
-You get `README.md`, `assets/`, `tools/build_assets.py` (to regenerate the art), and `.profile-studio/` (brief, evidence ledger, original copy, preview; git-ignored). It also writes publish instructions: a **public** repository named exactly like your username, with `README.md` at its root.
+You get `README.md`, `assets/`, `tools/build_assets.py` (to regenerate the art), and `.readme-studio/` (brief, evidence ledger, original copy, preview; git-ignored). It also writes publish instructions: a **public** repository named exactly like your username, with `README.md` at its root.
 
 ## A reproducible example
 
@@ -121,19 +129,21 @@ More results, each produced by a fresh agent from a one-paragraph request:
 ## What's inside
 
 ```
-skills/github-profile-studio/          ← the skill (copy this folder)
-├── SKILL.md                           non-negotiables, workflow, gotchas, fallbacks (~1.8k tokens)
+skills/readme-studio/          ← the skill (copy this folder)
+├── SKILL.md                           non-negotiables, 8-step workflow, design check, gotchas (~2.5k tokens)
 ├── references/                        loaded at the step that needs them
 │   ├── discovery.md                   evidence ledger, what not to infer, the ≤5 questions
+│   ├── material-study.md              look at the real work before designing; substitutes when there are no screenshots
+│   ├── project-readme.md              project READMEs: reader, code as truth, opening, badges, registries, anchors
 │   ├── content-architecture.md        reading speeds, order, ranking, copy, folds, cutting
-│   ├── art-direction.md               concept method, 5 directions, colour, type, composition, restraint
+│   ├── art-direction.md               concrete concept sketches, swap test, page system, opening & craft fidelity
 │   ├── github-rendering.md            measured sanitizer table, CSS facts, recipes, 3rd-party services
 │   ├── svg-craft.md                   generator workflow, SVG constraints, recipes, motion, bbox check
 │   ├── qa.md                          automated + manual checks, report template
 │   └── origin-case-study.md           the profile this was learned from — reasons, not looks
 ├── scripts/                           stdlib Python; deterministic jobs only
-│   ├── github_snapshot.py             public GitHub data → evidence JSON
-│   ├── check_profile.py               sanitizer rules, paths (case-sensitive), folds, privacy, --render, --online, --baseline
+│   ├── github_snapshot.py             public GitHub data → evidence JSON (a user, or --repo owner/name)
+│   ├── check_readme.py                sanitizer rules, paths, in-page anchors, privacy, --render, --online, --baseline, --portable
 │   ├── svg_kit.py                     safe SVG writing, text measuring (CJK), raster embedding, SVG lint
 │   ├── compose_images.py              crop / mosaic / mat real screenshots and figures
 │   └── render_preview.py              light / dark / phone preview from GitHub's real HTML
@@ -156,24 +166,24 @@ Full report: [docs/TESTING.md](docs/TESTING.md).
 
 - Taste is the user's call. The skill gives the agent judgment, not a guarantee of beauty. Look at `preview.html` and decide.
 - Results scale with the model and effort level. In our runs, agents at default effort sometimes made modest artwork.
-- GitHub's sanitizer can change. The reference table is dated, but `check_profile.py --render` re-measures for each README.
+- GitHub's sanitizer can change. The reference table is dated, but `check_readme.py --render` re-measures for each README.
 - SVG text uses viewers' fonts. Widths are estimated, so check on more than one OS if text is tight.
 - GitHub sees fixture personas as nonexistent, so snapshot-from-GitHub is exercised separately (on `octocat`).
 
 ## Where it comes from
 
-The method was distilled from building one real profile, [github.com/Timcai06](https://github.com/Timcai06), over 40+ commits with AI agents. That history includes stats cards that broke, banners that were reverted, a fake timeline replaced by real frames, a yellow highlight rejected for a grey system, and mosaics abandoned because the tiles were unreadable. [`origin-case-study.md`](skills/github-profile-studio/references/origin-case-study.md) lists each change and the rule it became, with commit references. Its pixel-and-editor look is *not* part of the skill.
+The method was distilled from building one real profile, [github.com/Timcai06](https://github.com/Timcai06), over 40+ commits with AI agents. That history includes stats cards that broke, banners that were reverted, a fake timeline replaced by real frames, a yellow highlight rejected for a grey system, and mosaics abandoned because the tiles were unreadable. [`origin-case-study.md`](skills/readme-studio/references/origin-case-study.md) lists each change and the rule it became, with commit references. Its pixel-and-editor look is *not* part of the skill.
 
 ## 中文说明
 
-**GitHub Profile Studio** 是一个开放 Agent Skills 格式的技能，让 Codex、Claude Code、Cursor、OpenCode 等 Agent 像设计师一样为你设计 GitHub 个人主页 README，而不是套模板。
+**README Studio** 是一个开放 Agent Skills 格式的技能，让 Codex、Claude Code、Cursor、OpenCode 等 Agent 像设计师一样为你设计 GitHub 个人主页 README，而不是套模板。
 
 - **先取材，后设计。** 读取公开仓库，建立「证据账本」。不编造技能、指标或经历，也不把仓库语言统计当熟练度。
 - **先定内容结构，再定视觉。** 主推 1–2 个项目，其余精选、折叠或删减。视觉概念从你自己的作品里提炼。极简、编辑式、技术导向、创意只是出发点，不是现成模板。
 - **受 GitHub 真实渲染约束。** 规则来自对 GitHub 渲染器的实测，并用 GitHub 自己的 Markdown 接口复核。
 - **本地优先。** 不擅自建仓库、提交或推送；改已有主页时保留原件并给出 diff。
 
-安装：把 `skills/github-profile-studio` 复制到 `~/.agents/skills/`（Codex、Cursor、OpenCode、Gemini CLI），或 `~/.claude/skills/`（Claude Code）。之后直接说「帮我做 / 改我的 GitHub 主页」即可。测试情况和未验证的部分，见 [docs/TESTING.md](docs/TESTING.md)。
+安装：把 `skills/readme-studio` 复制到 `~/.agents/skills/`（Codex、Cursor、OpenCode、Gemini CLI），或 `~/.claude/skills/`（Claude Code）。之后直接说「帮我做 / 改我的 GitHub 主页」即可。测试情况和未验证的部分，见 [docs/TESTING.md](docs/TESTING.md)。
 
 ## License
 

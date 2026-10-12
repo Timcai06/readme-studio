@@ -1,13 +1,15 @@
-# Discovery: learn who this is without inventing anything
+# Discovery: learn who (or what) this is without inventing anything
 
-Goal: an **evidence ledger** (facts, each with a source) and a **brief** (what the person wants), written into `.profile-studio/brief.md` from `assets/brief-template.md`.
+For project READMEs the same rules apply, with the code as the first source of truth: manifests, CLI help, the public API, examples, tests, CI config, releases. See `project-readme.md` §2.
+
+Goal: an **evidence ledger** (facts, each with a source) and a **brief** (what the person wants), written into `.readme-studio/brief.md` from `assets/brief-template.md`.
 
 ## 1. Gather, in this order of authority
 
 1. **What the user tells you.** Their positioning, goals, private or unpublished work, role in team projects, taste. These are the highest authority for *intent*. They are not verified facts, so label them `user-stated`.
 2. **Public GitHub data.**
    ```bash
-   python3 scripts/github_snapshot.py <username> --out .profile-studio/snapshot.json
+   python3 scripts/github_snapshot.py <username> --out .readme-studio/snapshot.json
    ```
    This collects the profile, social links, pinned repos (when a token is available), every owned repo with description, topics, stars, dates and fork/archived flags, and language mix plus README excerpt for the top 8 original repos. No network? Use the GitHub CLI or the web page if you have them. Otherwise ask the user to paste their bio and a list of projects. Never fill the gaps with guesses.
 3. **Repository READMEs and code** for the projects that might be featured. Read the README fully for any project you will describe. Skim the code only to confirm what it actually does, for example whether the "RAG" really exists.

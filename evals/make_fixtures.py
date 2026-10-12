@@ -38,7 +38,7 @@ def snapshot(login, name, bio, location, repos, blog=None, company=None, followe
     for r in repos:
         r["html_url"] = f"https://github.com/{login}/{r['name']}"
     return {
-        "schema": "github-profile-studio/snapshot@1",
+        "schema": "readme-studio/snapshot@1",
         "fixture": True,
         "fixture_note": "FICTIONAL test persona. Do not look this username up on GitHub; use only this file.",
         "fetched_at": "2026-10-12T09:00:00+00:00",
@@ -485,3 +485,5 @@ if __name__ == "__main__":
     creative()
     improve()
     demo()
+    from fixture_project import build as project_tidecalc
+    project_tidecalc(HERE)

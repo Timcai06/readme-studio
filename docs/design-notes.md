@@ -28,7 +28,7 @@ Scripts exist only where a deterministic answer beats re-deriving it each time:
 | Script | Why deterministic |
 |---|---|
 | `github_snapshot.py` | Same API calls, pagination, fork/archive flags, ranking for *reading*, untrusted-text labelling. |
-| `check_profile.py` | The sanitizer rules were measured, not guessed. It checks case-sensitive paths, folds, `<picture>` fallbacks, secrets/local paths, the template-defaults inventory, and the real-sanitizer diff (`--render`). |
+| `check_readme.py` | The sanitizer rules were measured, not guessed. It checks case-sensitive paths, folds, `<picture>` fallbacks, secrets/local paths, the template-defaults inventory, and the real-sanitizer diff (`--render`). |
 | `svg_kit.py` | Escaping, width estimates (incl. CJK), effective-px maths, safe raster embedding, and an SVG linter shared with the checker. |
 | `compose_images.py` | Crop / mosaic / mat geometry, with legibility widths printed before a human looks. |
 | `render_preview.py` | Same light/dark/phone panels every time, using GitHub's real HTML. |
@@ -53,6 +53,6 @@ All scripts use only the standard library, except Pillow for images. No package 
 
 ## 6. Known trade-offs
 
-- The sanitizer table is a dated measurement (2026-10-12). GitHub can change it. `check_profile.py --render` re-measures for each README, so the skill still catches a change, even if the prose is stale.
+- The sanitizer table is a dated measurement (2026-10-12). GitHub can change it. `check_readme.py --render` re-measures for each README, so the skill still catches a change, even if the prose is stale.
 - `measure()` is an estimate. Final text fit needs a rendered look; the skill says so.
 - Fixtures are fictional, so a skill run on fixtures cannot exercise `github_snapshot.py`. That script is tested separately against a real public account (`octocat`).
