@@ -1,0 +1,235 @@
+{
+  "skill_name": "github-profile-studio",
+  "note": "Fixtures are fictional personas (evals/make_fixtures.py). Assertions marked auto are checked by evals/grade.py; manual ones are reviewed by a person reading the output and transcript.",
+  "evals": [
+    {
+      "id": "newcomer",
+      "prompt_file": "fixtures/newcomer/request.md",
+      "expected_output": "A short, honest Create-mode profile for a student with a handful of repos: positioning as a learner, tiny-todo featured with what was learned, Rust learning mentioned, no inflated claims, no badge wall or stats.",
+      "assertions": [
+        {
+          "auto": "readme_exists"
+        },
+        {
+          "auto": "check_profile_no_errors"
+        },
+        {
+          "auto": "no_template_defaults",
+          "detail": "no stats/streak/trophy/snake/typing/visitor counter"
+        },
+        {
+          "auto": "mentions",
+          "values": [
+            "tiny-todo",
+            "Rust"
+          ]
+        },
+        {
+          "auto": "not_mentions",
+          "values": [
+            "awesome-python"
+          ],
+          "why": "a fork is not his work"
+        },
+        {
+          "auto": "no_inflation",
+          "values": [
+            "expert",
+            "senior",
+            "ninja",
+            "rockstar",
+            "10x",
+            "passionate"
+          ]
+        },
+        {
+          "auto": "contains_text",
+          "values": [
+            "rafa.souza.dev@example.com"
+          ]
+        },
+        {
+          "auto": "max_words",
+          "value": 450
+        },
+        {
+          "manual": "weather-now, if shown, is credited as tutorial-based"
+        },
+        {
+          "manual": "no claims that are not in snapshot/request (ledger check)"
+        },
+        {
+          "auto": "uses_assets",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "id": "seasoned",
+      "prompt_file": "fixtures/seasoned/request.md",
+      "expected_output": "A developer-oriented page that leads with Postgres reliability tools (pgwhen, migra-lint, maybe tracehound), mentions talks, groups the rest, folds the archive, and avoids listing 26 repos equally.",
+      "assertions": [
+        {
+          "auto": "readme_exists"
+        },
+        {
+          "auto": "check_profile_no_errors"
+        },
+        {
+          "auto": "no_template_defaults"
+        },
+        {
+          "auto": "mentions",
+          "values": [
+            "pgwhen",
+            "migra-lint",
+            "PGConf"
+          ]
+        },
+        {
+          "auto": "not_mentions",
+          "values": [
+            "cockroach",
+            "kubernetes"
+          ],
+          "why": "forks without contribution"
+        },
+        {
+          "auto": "lead_before",
+          "first": [
+            "pgwhen",
+            "migra-lint"
+          ],
+          "then": [
+            "nvim-config",
+            "advent-of-code"
+          ]
+        },
+        {
+          "manual": "no drifting star counts stated as text; terminal style uses real commands from READMEs only"
+        },
+        {
+          "manual": "visible project count <= 6"
+        },
+        {
+          "manual": "repos beyond the shown ones are either in an archive fold or deliberately cut with a reason in the brief (user asked not to list everything)"
+        },
+        {
+          "auto": "uses_assets",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "id": "creative",
+      "prompt_file": "fixtures/creative/request.md",
+      "expected_output": "An editorial / print-catalogue page using the supplied artwork, warm paper + pink/teal, no badges, no terminal/editor look, bilingual English + Arabic, leading with kufic-grid and Qamar.",
+      "assertions": [
+        {
+          "auto": "readme_exists"
+        },
+        {
+          "auto": "check_profile_no_errors"
+        },
+        {
+          "auto": "no_shields_badges"
+        },
+        {
+          "auto": "not_like_origin",
+          "detail": "no editor/terminal/pixel-workspace markers from the origin profile"
+        },
+        {
+          "auto": "contains_arabic"
+        },
+        {
+          "auto": "lead_before",
+          "first": [
+            "kufic-grid",
+            "Qamar"
+          ],
+          "then": [
+            "shader-notes"
+          ]
+        },
+        {
+          "auto": "uses_assets",
+          "min": 1
+        },
+        {
+          "manual": "visual direction reads as editorial/print, distinct from the origin profile"
+        }
+      ]
+    },
+    {
+      "id": "improve",
+      "prompt_file": "fixtures/improve/request.md",
+      "expected_output": "Improve mode: original preserved in .profile-studio/original or untouched ./existing, keep-list intact (gif, reading list, Spanish line), snake/stats removed, Cartero and queue-bench given real descriptions, a change summary.",
+      "assertions": [
+        {
+          "auto": "readme_exists"
+        },
+        {
+          "auto": "check_profile_no_errors"
+        },
+        {
+          "auto": "existing_untouched"
+        },
+        {
+          "auto": "contains_text",
+          "values": [
+            "Hecho con café en Valparaíso ☕",
+            "Designing Data-Intensive Applications",
+            "Crafting Interpreters",
+            "pixel-tomas.gif"
+          ]
+        },
+        {
+          "auto": "mentions",
+          "values": [
+            "Cartero",
+            "queue-bench"
+          ]
+        },
+        {
+          "auto": "no_template_defaults"
+        },
+        {
+          "manual": "agent reports what changed and why (diff or summary)"
+        }
+      ]
+    },
+    {
+      "id": "demo-ilse",
+      "prompt_file": "fixtures/demo-ilse/request.md",
+      "expected_output": "The video demo: a template 'Hi 👋' profile becomes a calm cartographic profile with original SVG art (contours/rivers), leading with contour-kit and riverline, dark-mode safe.",
+      "assertions": [
+        {
+          "auto": "readme_exists"
+        },
+        {
+          "auto": "check_profile_no_errors"
+        },
+        {
+          "auto": "no_template_defaults"
+        },
+        {
+          "auto": "mentions",
+          "values": [
+            "contour-kit",
+            "riverline"
+          ]
+        },
+        {
+          "auto": "uses_svg",
+          "min": 1
+        },
+        {
+          "auto": "not_like_origin"
+        },
+        {
+          "manual": "theme handling: picture pairs or self-contained plates"
+        }
+      ]
+    }
+  ]
+}

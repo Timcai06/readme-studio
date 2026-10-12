@@ -1,0 +1,15 @@
+name: validate
+on: [push, pull_request]
+jobs:
+  skill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+      - run: pip install pillow
+      - run: python tools/validate_skill.py
+      - run: python -m unittest discover -s tests -v
+      - uses: astral-sh/setup-uv@v6
+      - run: uvx --from skills-ref agentskills validate skills/github-profile-studio

@@ -1,0 +1,43 @@
+{
+  "case": "improve",
+  "workspace": "<eval workspace>",
+  "readme": "./improved/README.md",
+  "passed": 6,
+  "total": 6,
+  "results": [
+    {
+      "assertion": "readme_exists",
+      "passed": true,
+      "detail": "improved/README.md"
+    },
+    {
+      "assertion": "check_profile_no_errors",
+      "passed": true,
+      "detail": "result: 0 errors, 0 warnings"
+    },
+    {
+      "assertion": "./existing untouched",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "assertion": "keeps/contains exact text",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "assertion": "mentions ['Cartero', 'queue-bench']",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "assertion": "no_template_defaults",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "manual": [
+    "agent reports what changed and why (diff or summary)"
+  ],
+  "check_profile": "./improved/README.md: lines 42, words 151, images 1, folds 0, text_links 4, local_assets_kb 0, headings 5\n  info    [render] GitHub sanitizer not checked (run with --render when online)\nresult: 0 errors, 0 warnings, 1 info\n"
+}

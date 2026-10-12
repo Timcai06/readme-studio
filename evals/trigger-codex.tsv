@@ -1,0 +1,9 @@
+expected	triggered	query
+yes	yes	帮我把我的 GitHub 个人主页做得好看一点，我的用户名是 example-user（虚构，别去查）。先只说你的计划，不要动手。
+yes	yes	My GitHub profile looks like every other template (badges, stats cards, snake). Can you redesign it? Just outline your plan first, don't build anything.
+yes	yes	I just made the repo with my username so I get a profile README. What should I put on it? Plan only.
+yes	yes	Audit my profile README in ./README.md and tell me what to fix. Plan only, no edits.
+no	no	Fix the typo 'recieve' in the README of my Python library. Plan only.
+no	no	Write a README for my CLI tool that explains installation and usage. Plan only.
+no	no	Build me a personal portfolio website with Next.js and Tailwind. Plan only.
+no	no	Add a GitHub Actions workflow that runs pytest on every push. Plan only.

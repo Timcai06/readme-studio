@@ -1,0 +1,59 @@
+{
+  "case": "newcomer",
+  "workspace": "<eval workspace>",
+  "readme": "./README.md",
+  "passed": 9,
+  "total": 9,
+  "results": [
+    {
+      "assertion": "readme_exists",
+      "passed": true,
+      "detail": "README.md"
+    },
+    {
+      "assertion": "check_profile_no_errors",
+      "passed": true,
+      "detail": "result: 0 errors, 0 warnings"
+    },
+    {
+      "assertion": "no_template_defaults",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "assertion": "mentions ['tiny-todo', 'Rust']",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "assertion": "does not mention ['awesome-python']",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "assertion": "no inflated wording",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "assertion": "keeps/contains exact text",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "assertion": "<= 450 words",
+      "passed": true,
+      "detail": "142 words"
+    },
+    {
+      "assertion": "uses_assets >= 1",
+      "passed": true,
+      "detail": "assets/checklist.svg"
+    }
+  ],
+  "manual": [
+    "weather-now, if shown, is credited as tutorial-based",
+    "no claims that are not in snapshot/request (ledger check)"
+  ],
+  "check_profile": "./README.md: lines 22, words 119, images 1, folds 0, text_links 3, local_assets_kb 1, headings 3\n  info    [privacy] public email address(es): rafa.souza.dev@example.com — confirm the owner wants them shown\n  info    [render] GitHub sanitizer not checked (run with --render when online)\nresult: 0 errors, 0 warnings, 2 info\n"
+}

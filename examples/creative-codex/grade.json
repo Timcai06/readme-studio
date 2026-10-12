@@ -1,0 +1,48 @@
+{
+  "case": "creative",
+  "workspace": "<eval workspace>",
+  "readme": "./README.md",
+  "passed": 7,
+  "total": 7,
+  "results": [
+    {
+      "assertion": "readme_exists",
+      "passed": true,
+      "detail": "README.md"
+    },
+    {
+      "assertion": "check_profile_no_errors",
+      "passed": true,
+      "detail": "result: 0 errors, 0 warnings"
+    },
+    {
+      "assertion": "no shields.io badges",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "assertion": "not a clone of the origin profile",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "assertion": "contains Arabic text",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "assertion": "['kufic-grid', 'Qamar'] appear before ['shader-notes']",
+      "passed": true,
+      "detail": "positions [315, 1033] vs []"
+    },
+    {
+      "assertion": "uses_assets >= 1",
+      "passed": true,
+      "detail": "assets/cover.svg, assets/kufic-grid.png, assets/qamar-specimen.png, assets/tide-sketches.png"
+    }
+  ],
+  "manual": [
+    "visual direction reads as editorial/print, distinct from the origin profile"
+  ],
+  "check_profile": "./README.md: lines 33, words 135, images 4, folds 0, text_links 5, local_assets_kb 80, headings 4\n  info    [render] GitHub sanitizer not checked (run with --render when online)\nresult: 0 errors, 0 warnings, 1 info\n"
+}

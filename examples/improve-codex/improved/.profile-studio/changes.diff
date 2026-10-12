@@ -1,0 +1,64 @@
+--- existing/README.md
++++ improved/README.md
+@@ -1,30 +1,41 @@
+-# Hi there 👋 I'm Tomás!
++# Tomás
+ 
+-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=F75C7E&width=435&lines=Backend+developer;Elixir+enthusiast;Coffee+lover" alt="Typing SVG" />
++I build webhook tools and benchmark Postgres-backed queues.
+ 
+-### 🚀 About me
+-- 🔭 I’m currently working on **Cartero**, a self-hosted webhook relay
+-- 🌱 I’m currently learning **Elixir** and **OTP**
+-- 👯 I’m looking to collaborate on open source observability tools
+-- 💬 Ask me about **Postgres**, **queues** and **coffee**
+-- ⚡ Fun fact: I once debugged a production outage from a ferry
++### Cartero
+ 
+-### 🛠️ Tech stack
+-![Elixir](https://img.shields.io/badge/elixir-%234B275F.svg?style=for-the-badge&logo=elixir&logoColor=white) ![Phoenix](https://img.shields.io/badge/phoenix-%23FD4F00.svg?style=for-the-badge&logo=phoenixframework&logoColor=white) ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white) ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white) ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white) ![Rust](https://img.shields.io/badge/rust-%23000000.svg?style=for-the-badge&logo=rust&logoColor=white) ![Kubernetes](https://img.shields.io/badge/kubernetes-%23326ce5.svg?style=for-the-badge&logo=kubernetes&logoColor=white) ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white) ![Vim](https://img.shields.io/badge/VIM-%2311AB00.svg?style=for-the-badge&logo=vim&logoColor=white)
++A self-hosted webhook relay: receive, verify, queue and fan out webhooks.
++Events are stored durably in Postgres, with retries and backoff for delivery.
++A small Phoenix dashboard shows deliveries and lets you replay any event.
+ 
+-### 📊 GitHub stats
+-<p>
+-<img src="https://github-readme-stats.vercel.app/api?username=tomas-rivera-dev&show_icons=true&theme=radical" />
+-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=tomas-rivera-dev&layout=compact&theme=radical" />
+-</p>
+-<img src="https://streak-stats.demolab.com?user=tomas-rivera-dev&theme=radical" />
++[Explore Cartero →](https://github.com/tomas-rivera-dev/cartero)
+ 
+-![snake gif](https://github.com/tomas-rivera-dev/tomas-rivera-dev/blob/output/github-contribution-grid-snake.svg)
++### Queue benchmarks
+ 
+-### 📚 Currently reading
++The same workload across Oban, river and pgmq. Throughput and latency under
++contention, with scripts to reproduce the benchmarks.
++
++[Read queue-bench →](https://github.com/tomas-rivera-dev/queue-bench)
++
++---
++
++### Away from the queue
++
++I’m currently learning **Elixir** and **OTP**, and looking to collaborate on
++open source observability tools. Ask me about Postgres, queues and coffee.
++I once debugged a production outage from a ferry.
++
++[Postgres notes](https://github.com/tomas-rivera-dev/pg-notes) — notes on internals while reading the source.  
++[pixel-me](https://github.com/tomas-rivera-dev/pixel-me) — the little coffee-drinking avatar below.
++
++### Currently reading
++
+ - *Designing Data-Intensive Applications* — chapter 7, transactions
+ - *The Elements of Typographic Style* — slowly
+ - *Crafting Interpreters* — finished! ✅
+ 
+-<p align="center"><img src="assets/pixel-tomas.gif" width="96" alt="pixel me drinking coffee"></p>
+-<p align="center"><i>Hecho con café en Valparaíso ☕</i></p>
++---
++
++<img src="assets/pixel-tomas.gif" width="96" alt="pixel me drinking coffee">
++
++*Hecho con café en Valparaíso ☕*
