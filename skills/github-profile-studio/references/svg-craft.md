@@ -7,7 +7,8 @@ Read this when the design needs custom images: hero, project cards, diagrams, da
 1. **Write a generator, not a file.** Put a script in the profile repo (`tools/build_assets.py`) that writes every SVG from data (a small JSON or a dict at the top). Edit the script and re-run it; never hand-edit the output. This keeps text, colours and positions consistent, makes light/dark pairs trivial, and lets the owner update a project line in a year.
 2. **Use `scripts/svg_kit.py`** for escaping, width estimates, wrapping, raster embedding and the safety lint (copy it next to the generator, or import it from the skill folder).
 3. **Data in, art out.** Text in the art (project names, taglines, commands) comes from the evidence ledger. If it isn't in the ledger, it doesn't go in the picture.
-4. **Re-run and lint** (`python3 scripts/svg_kit.py lint assets/*.svg`), then look at it (§6).
+4. **Give every asset a job.** Before drawing, write one line: what does this image show that text can't (a real structure, a real output, a relation, a timeline, the identity)? Shapes generated from a keyword or a project name alone have no job; they decorate. See `material-study.md` §3 for real structure and content to draw from.
+5. **Re-run and lint** (`python3 scripts/svg_kit.py lint assets/*.svg`), then look at it (§6).
 
 ## 2. Hard constraints (an SVG inside `<img>`)
 
@@ -44,12 +45,12 @@ Then use the `<picture>` recipe from `github-rendering.md`.
 
 **Real-work mosaics and figure mats.** Use `scripts/compose_images.py` (crop browser chrome first; mosaic for frames of one work; mat for figures with mixed ratios). Check the reported desktop/phone widths.
 
-## 4. Motion (optional, opt-in)
+## 4. Motion
 
-- CSS `@keyframes` inside the SVG's `<style>`, or SMIL. Both play inside `<img>`.
-- Keep it slow and small: a cursor blink, a line drawing in once, a gentle drift. Avoid infinite attention-grabbing loops near text.
-- Respect `@media (prefers-reduced-motion: reduce) { * { animation: none } }`. Whether a given viewer's browser applies it inside `<img>` varies, so the static first frame must be a complete design.
-- The animation must not carry information. A viewer with motion off loses nothing.
+- **Identity motion** is a deliberate design tool (see `art-direction.md` §4): a name that types once, lines that cycle through true roles or current work. Use `svg_kit.typewriter(svg, x, y, lines, size, family, fill, bg, cursor, loop, anchor_id)`. It types with a stepped cover on a solid background (CSS `@keyframes`, plays inside `<img>`), never needs a third-party service, and stops under reduced motion with the first line complete. Use one call per row with distinct `anchor_id`s; the background must be a flat colour behind the text, so generate a light and a dark pair.
+- Other motion: CSS `@keyframes` or SMIL, slow and small (a cursor blink, a line drawing in once). Avoid fast infinite loops near text.
+- Respect `@media (prefers-reduced-motion: reduce)`, and make sure the static frame is a complete design, since some renderers show only that.
+- Essential facts never live only in the animation: cycle lines are also stated in README text or the static frame.
 
 ## 5. Accessibility
 

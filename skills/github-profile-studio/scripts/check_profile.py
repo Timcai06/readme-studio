@@ -57,7 +57,7 @@ CLICHE_SERVICES = {
     "profile-counter": "visitor counter",
     "snk": "contribution snake",
     "github-contribution-grid-snake": "contribution snake",
-    "readme-typing-svg": "typing animation",
+    "readme-typing-svg": "third-party typing banner (a self-generated svg_kit.typewriter SVG avoids the service dependency)",
     "activity-graph": "activity graph",
 }
 DYNAMIC_HOSTS = ("shields.io", "skillicons.dev", "readme-typing-svg", "vercel.app", "herokuapp.com",

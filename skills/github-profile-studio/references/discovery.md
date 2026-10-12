@@ -57,10 +57,6 @@ A good profile has one idea that ties the projects together. Look across repos f
 
 The through-line drives the intro sentence, the project order and often the visual concept (see `art-direction.md`).
 
-## 5. Signals to note for later stages
+## 5. Then study the work
 
-- Existing visual identity: personal site colours, logo, avatar style. Reuse them for consistency, with permission.
-- Real artifacts that can become images: screenshots, demo GIFs, figures, renders, diagrams in the repos. Real work shown beats illustrations of work.
-- Commands, APIs or output the projects actually have (useful for code-flavoured visuals; quote them, don't invent them).
-- Writing language and tone of their own READMEs. Match their voice and don't import yours.
-- Accessibility needs or constraints the user mentions.
+Facts end here. What the work looks like, how it behaves and what real material exists is the next step: `material-study.md`. Note the writing language and tone of their READMEs here: match their voice, don't import yours.

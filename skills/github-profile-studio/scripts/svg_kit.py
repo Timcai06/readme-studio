@@ -5,7 +5,7 @@ Import it from your own generator script (keep the generator in the profile
 repository so the art can be rebuilt):
 
     import sys; sys.path.insert(0, "<skill>/scripts")
-    from svg_kit import Svg, esc, measure, wrap, effective_px, embed_raster, FONTS
+    from svg_kit import Svg, esc, measure, wrap, effective_px, embed_raster, typewriter, FONTS
 
     s = Svg(1200, 360, title="Ada Park — maps, rivers and routing")
     s.add(f'<rect width="1200" height="360" fill="{bg}"/>')
@@ -149,6 +149,58 @@ class Svg:
         if problems:
             raise ValueError(f"{path}: " + "; ".join(p[1] for p in problems))
         return path
+
+
+def typewriter(svg: "Svg", x: float, y: float, lines: list[str], size: float = 28, family: str = "mono",
+               fill: str = "#1f2328", bg: str = "#ffffff", cursor: str | None = None, char_ms: int = 55,
+               hold_ms: int = 1600, loop: bool = True, anchor_id: str = "tw") -> "Svg":
+    """Typed-text animation that is safe inside <img> on GitHub.
+
+    Each line is revealed by a background-coloured cover sliding right in
+    steps (CSS @keyframes on transform; widely supported in SVG images), then
+    erased, then the next line types. One line with loop=False types once and
+    stays (a name). No scripts, no SMIL, no external fonts.
+    Needs a solid background colour behind the text (pass it as bg).
+    Reduced motion and no-animation renderers show the first line complete.
+    """
+    stack = FONTS.get(family, family)
+    widths = [measure(line, size, family) + size * 0.2 for line in lines]
+    type_ms = [max(1, len(line)) * char_ms for line in lines]
+    slot = [t * 2 + hold_ms + 300 if loop else t + hold_ms for t in type_ms]
+    total = sum(slot) if loop and len(lines) > 1 else slot[0]
+    css = [f".{anchor_id}l{{opacity:0}}.{anchor_id}l0{{opacity:1}}"
+           f".{anchor_id}c0{{transform:translateX({widths[0]:.1f}px)}}"]
+    start = 0
+    for i, line in enumerate(lines):
+        w, t = widths[i], type_ms[i]
+        pct = lambda ms: f"{100 * ms / total:.3f}%"
+        if loop and len(lines) > 1:
+            a, b, c, d = start, start + t, start + t + hold_ms, start + 2 * t + hold_ms
+            frames = (f"0%{{transform:translateX(0)}}{pct(a)}{{transform:translateX(0);animation-timing-function:steps({len(line)})}}"
+                      f"{pct(b)}{{transform:translateX({w:.1f}px)}}{pct(c)}{{transform:translateX({w:.1f}px);animation-timing-function:steps({len(line)})}}"
+                      f"{pct(d)}{{transform:translateX(0)}}100%{{transform:translateX(0)}}")
+            vis = (f"0%{{opacity:0}}{pct(a)}{{opacity:1}}{pct(d + 250)}{{opacity:1}}"
+                   f"{pct(min(total, d + 260))}{{opacity:0}}100%{{opacity:0}}")
+            css.append(f"@keyframes {anchor_id}k{i}{{{frames}}}@keyframes {anchor_id}v{i}{{{vis}}}"
+                       f".{anchor_id}c{i}{{animation:{anchor_id}k{i} {total}ms linear infinite}}"
+                       f".{anchor_id}l{i}{{animation:{anchor_id}v{i} {total}ms step-end infinite}}")
+        else:
+            css.append(f"@keyframes {anchor_id}k{i}{{from{{transform:translateX(0)}}to{{transform:translateX({w:.1f}px)}}}}"
+                       f".{anchor_id}c{i}{{animation:{anchor_id}k{i} {t}ms steps({max(1, len(line))}) both}}")
+        start += slot[i]
+    css.append("@keyframes %sblink{50%%{opacity:0}}.%scur{animation:%sblink 1s step-end infinite}" % ((anchor_id,) * 3))
+    css.append(f"@media (prefers-reduced-motion: reduce){{.{anchor_id}l,.{anchor_id}c,.{anchor_id}cur{{animation:none!important}}}}")
+    svg.define(f"<style>{''.join(css)}</style>")
+    h = size * 1.35
+    for i, line in enumerate(lines):
+        w = widths[i]
+        cur = (f'<rect class="{anchor_id}cur" x="{x - size * 0.1:.1f}" y="{y - size * 0.95:.1f}" width="{size * 0.08:.1f}" '
+               f'height="{size * 1.15:.1f}" fill="{cursor}"/>') if cursor else ""
+        svg.add(f'<g class="{anchor_id}l {anchor_id}l{i}"><text x="{x}" y="{y}" font-size="{size}" '
+                f'font-family="{esc(stack)}" fill="{fill}" xml:space="preserve">{esc(line)}</text>'
+                f'<g class="{anchor_id}c {anchor_id}c{i}"><rect x="{x - 1:.1f}" y="{y - size:.1f}" width="{w + 2:.1f}" '
+                f'height="{h:.1f}" fill="{bg}"/>{cur}</g></g>')
+    return svg
 
 
 def embed_raster(path, max_width: int | None = None, colors: int | None = None, fmt: str = "PNG") -> str:

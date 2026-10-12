@@ -23,6 +23,8 @@ If the 5-second answer needs the visitor to read a paragraph, the opening is wro
 - **Archive**: everything else worth keeping, folded, one line each.
 - **Invitation**: what kind of contact is welcome and how. It closes the page and can mirror the opening visually.
 
+These are **layers**, and each layer gets its own visual treatment in the page system (`art-direction.md` §3). Identity, lead work, series/practice, related projects and deep reading (folds) should be told apart at a glance. Lead work gets the strongest real material. Related projects are connected to the leads, not repeated in the same format.
+
 Change the order when the purpose demands it: a job-seeker may put a one-line "currently open to …" in Identity. A researcher may put publications before projects. An artist may lead with the work image and keep words minimal.
 
 ## 3. Choosing and ranking projects
@@ -74,8 +76,8 @@ Do **not** cut substance to fake minimalism. In the origin project the owner exp
 
 ## 7. Special cases
 
-- **Newcomer, little history:** be honest and small. Positioning as a learner is fine: "Learning systems programming; currently building X". Show 1–2 projects with *what was learned or decided*, not inflated claims. No skill bars, no "expert". A calm, well-set short page beats a padded long one. Small is not the same as bare: one modest original mark (a monogram, a tiny drawing of the thing they are learning, a hand-set name line) gives a short page an identity without inflating it.
+- **Newcomer, little history:** be honest and small. Positioning as a learner is fine: "Learning systems programming; currently building X". Show 1–2 projects with *what was learned or decided*, not inflated claims. No skill bars, no "expert". Short is fine, but short is not low-effort: the few things shown still get a real visual treatment from their actual work (the learning log's real chapters, the tool's real output).
 - **Many repos (30+):** group by theme ("Geospatial", "Developer tools") and lead with 2. Aggregate claims only when verified ("maintains 4 published crates" means you checked 4).
 - **Bilingual pages:** choose the primary language by audience. Keep both visible if they are part of identity. Two short parallel paragraphs read better than interleaved lines. Make sure each claim says the same thing in both languages.
 - **Private / unreleased work:** name and one line. Status `in progress` where true. No links. Images only if the user supplies and approves them, cropped of browser chrome, URLs and personal data.
-- **Improve mode:** the existing content is the owner's voice. Keep their phrasing unless it is wrong. Restructure before you rewrite.
+- **Improve mode:** the existing content is the owner's voice. Keep their phrasing and important links unless they are wrong. Restructure before you rewrite. Content kept is not a limit on the visual work: a page that keeps every original word can still gain a complete visual system.

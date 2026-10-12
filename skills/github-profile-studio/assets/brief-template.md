@@ -1,6 +1,7 @@
 # Profile brief — <username>
 
 > Working file for the agent and the owner. Keep it in `.profile-studio/` (not published).
+> Notes, not essays: a cell or a line per item. The brief exists to make the design better; if it grows past a few screens, you are documenting instead of designing.
 
 ## Mode and assumptions
 - Mode: Create | Improve | Audit
@@ -20,6 +21,11 @@
 |---|---|---|---|
 | | | | |
 
+## Material notes
+| ID | Work | Public material examined | Form · colour · density · interaction · medium · voice | Usable real material | Missing / substitute (real structure or content) |
+|---|---|---|---|---|---|
+| M1 | | | | | |
+
 ## Section plan
 | # | Section | Job | Content | Visible / folded |
 |---|---|---|---|---|
@@ -30,18 +36,37 @@
 - Project tiers: Lead: … · Featured: … · Archive: … · Omit: …
 - Cut list (and why):
 - Keep-list (Improve mode — owner's must-keep items, verbatim where required):
+- Improve scopes: content scope … / visual scope … (decided separately)
 
-## Design spec
-- Concept (one sentence):
-- Direction mix (minimal / editorial / developer / creative / custom):
-- Grammar (frames, rules, radii, numbering, label style):
-- Per-item variation (motif per project, derived from):
-- Palette (light / dark, accent roles):
-- Type (stacks, sizes, effective px at display width):
-- Image treatment (real artifacts? mats? mosaics? theme pairs?):
-- Density and rhythm:
+## Concept candidates
+For each of the three: sources (M-ids) · opening composition · lead vs secondary treatment · real material + generated assets and their jobs · rhythm · why this person.
+
+1. …
+2. …
+3. …
+
+Chosen: … · Swap test: what breaks if another person's name is put in …
+
+## Page system
+- Type roles (names / body / labels & numbers):
+- Frame language:
+- Colour jobs (identity, per-project, ground, data; light and dark):
+- Image treatment (real material and generated assets as one family):
+- Identity opening (what is set large; the typed name and cycling lines, and why each is true; or why it is still):
+- Craft fidelity (what each asset renders at full detail):
+- Per-project expression (each lead's own material / motif / accent):
+- Layer treatments (identity · lead · series · related · deep reading):
 - Motion: none | subtle (what, why)
-- Deliberately absent (e.g. stats cards, badge wall, typing banner):
+- Deliberately absent:
+
+## Design check
+1. Specific (swap test fails because …):
+2. Material for each lead:
+3. System (shared rules + per-project + distinct layers):
+4. Every planned image has a job, at finished fidelity:
+5. Opening is the loudest moment:
+
+Dropped material (usable artefacts not placed, with reason):
 
 ## Build plan
 | Output | Made by | From |

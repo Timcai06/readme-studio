@@ -1,4 +1,6 @@
-# Quality assurance before delivery
+# Engineering checks before delivery
+
+These checks prove the page is **correct**: GitHub-compatible, truthful, safe, legible in both themes and accessible. They do not judge whether the design is good. That judgment happened in the design check (SKILL.md step 5) and belongs to the owner. Never summarise passing checks as "design complete" or "looks good". Keep the effort proportionate: run what applies once, fix, re-run. Don't produce extra check artifacts beyond the report table.
 
 Run every applicable check. Report each result as **passed**, **failed (fixed)**, **failed (open)** or **not verified (why)**. Never write "passed" for something you did not run.
 
@@ -32,19 +34,14 @@ The command is only an example; use the profile repo's own generator. No diff me
 - [ ] Contact channels are exactly the ones the user approved.
 - [ ] Improve mode: everything on the user's keep-list is still present, verbatim where they asked.
 
-## 3. Visual and reading checks
+## 3. Rendering and legibility (engineering, not taste)
 
-Use the preview page (or a real GitHub page if the user has published a test). If you can view images, look. If you cannot, inspect the DOM and SVG geometry and state that the visual judgement is pending.
+Use the preview page. Inspect DOM and SVG geometry if you can't view images. Screenshot review is optional unless the user asks for visual verification.
 
-- [ ] First screen answers "who / what" without scrolling or opening anything.
-- [ ] Hierarchy: chapters, items and labels are distinguishable at a glance.
-- [ ] Light **and** dark: no invisible text, no white boxes floating on dark unless intended, `<picture>` pairs switch.
-- [ ] Phone width (375 px panel): no essential text only inside small images; tables still usable; nothing wider than the column.
-- [ ] Image text effective size ≥ 12 px on desktop (`effective_px`); SVG text inside its canvas (bbox snippet in `svg-craft.md`).
-- [ ] Restraint pass from `art-direction.md` §7.
-- [ ] Alt text on every image says what it communicates.
-
-The person decides whether it is beautiful. Present facts and the preview; don't declare the aesthetics finished on their behalf.
+- [ ] Light **and** dark: no invisible text, `<picture>` pairs switch.
+- [ ] Phone width: essential facts exist as text; nothing wider than the column.
+- [ ] Text in images has effective size ≥ 12 px on desktop and stays inside its canvas (bbox snippet in `svg-craft.md`).
+- [ ] Alt text says what each image communicates.
 
 ## 4. Publishing readiness (don't publish, just check)
 
@@ -67,6 +64,7 @@ The Markdown API proves the sanitizer result. It does not show github.com's CSS:
 | GitHub sanitizer (--render) | passed — 14 images, 2 folds kept, nothing escaped |
 | External links (--online) | not verified — offline |
 | SVG lint | passed (4 files, 38–212 KB) |
-| Light / dark / phone preview | generated at .profile-studio/preview.html — visual judgement: yours |
+| Light / dark / phone preview | generated at .profile-studio/preview.html |
+| Design | not judged by these checks: for the owner to review |
 | Real github.com page | not verified — not published |
 ```

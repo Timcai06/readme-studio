@@ -160,6 +160,19 @@ class SvgKitTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 s.write(Path(tmp) / "x.svg")
 
+    def test_typewriter_is_safe_and_reduced_motion_aware(self):
+        s = svg_kit.Svg(600, 120, title="t")
+        s.add('<rect width="600" height="120" fill="#0d1117"/>')
+        svg_kit.typewriter(s, 20, 50, ["Hi, I'm Ada"], loop=False, bg="#0d1117", anchor_id="a")
+        svg_kit.typewriter(s, 20, 100, ["maps", "routing"], bg="#0d1117", cursor="#7ee787", anchor_id="b")
+        out = s.render()
+        self.assertIn("prefers-reduced-motion", out)
+        self.assertIn("steps(", out)
+        self.assertNotIn("<script", out)
+        with tempfile.TemporaryDirectory() as tmp:
+            path = s.write(Path(tmp) / "hero.svg")
+            self.assertEqual([p for p in svg_kit.lint_svg(path) if p[0] == "error"], [])
+
     def test_text_escapes_and_adds_cjk_fonts(self):
         s = svg_kit.Svg(100, 20, title="<t>")
         s.text(0, 10, "A & 中")

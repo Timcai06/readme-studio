@@ -131,7 +131,7 @@ Use these as building blocks. They are not a page template.
 |---|---|---|---|
 | Static badges | shields.io `/badge/…` | Low. Cached by camo, simple URL. | Use sparingly, for real facts (stack of a project, a link). |
 | Live stats / langs / streak / trophies | github-readme-stats, streak-stats, trophy | Public instances get rate-limited or go down. The numbers often flatter or mislead (e.g. "top languages" by bytes). | Off, unless the user asks or a number really tells their story. |
-| Typing / animated text | readme-typing-svg | Depends on a free service, and motion pulls the eye. | Off by default. If used, it should say something real. |
+| Typing / animated text | readme-typing-svg | Depends on a free service. | Animated identity text is welcome when it says something true. Prefer generating it in the repo (`svg_kit.typewriter`); use the service only if the user wants it. |
 | Contribution snake, activity graphs | Platane/snk via Actions | Needs a workflow committed to the user's repo. Mostly decoration. | Off unless asked. If asked, explain the Action it requires. |
 | Icon sets | skillicons.dev, simple-icons via shields | External, and square icons mixed with rectangular badges look ragged. | Vendor (download into `assets/`) when the set is stable. |
 
