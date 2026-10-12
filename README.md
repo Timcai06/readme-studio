@@ -4,6 +4,23 @@
 
 <p align="center"><sub>Open <a href="https://agentskills.io/specification">Agent Skills</a> format · tested in Codex CLI and OpenCode · discovered by Claude Code · MIT</sub></p>
 
+## The output and the checks
+
+The deliverable is a README backed by inspectable local material: its original copy, the editorial brief, generated assets and the change diff. The agent chooses what to say and how to organize it; scripts provide repeatable checks for the parts that can be measured.
+
+![README Studio evidence, editorial choices, asset generation and validation workflow](assets/readme-diagrams/system.png)
+
+图左为排版样本，图右为 Skill 实际描述的交付目录；没有伪造发布页面截图。
+
+| Tool | Checks or produces | Limit |
+| --- | --- | --- |
+| [`check_readme.py`](skills/readme-studio/scripts/check_readme.py) | Paths, heading anchors, unsafe HTML, private-data patterns and SVG lint; optional real sanitizer checks | Static checks do not certify visual quality |
+| [`render_preview.py`](skills/readme-studio/scripts/render_preview.py) | Light, dark and phone-width previews from rendered Markdown | Local styling and image handling differ from github.com |
+| [`svg_kit.py`](skills/readme-studio/scripts/svg_kit.py) | SVG generation, text width estimates and asset lint | Viewer fonts can change text geometry |
+| [`validate_skill.py`](tools/validate_skill.py) | Skill structure, reference paths and bundled script checks | Repository validity does not replace a full agent run |
+
+The final handoff records what was actually checked and what still needs a human view. Publishing stays with the user; the tools do not turn a successful check into permission to push.
+
 ## The problem
 
 Most READMEs come out of a template. Project READMEs get a badge row, a feature list of adjectives and an install block. Profiles get `Hi 👋 I'm …`, a wall of badges, a stats card, a contribution snake. Generators make that faster, but every output still looks like every other one, because the layout *is* the product.
